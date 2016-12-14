@@ -3,6 +3,7 @@ package com.github.bennidi.rest.sudoku.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -30,7 +31,8 @@ import java.util.*;
 @NoArgsConstructor
 public class Board {
 
-    @NotNull @Id private String id;
+    @Getter @NotNull @Id
+    private String id = UUID.randomUUID().toString();
 
     private List<Move> moves = new ArrayList<>(81);
     // Board dimensions do not need to be configurable
@@ -118,22 +120,9 @@ public class Board {
         return new BoardInfo(getId(), getLastMove(), getNumberOfRemainingMoves());
     }
 
-    public String getId() {
-        return id;
-    }
-
     public List<Move> getMoves() {
         return Collections.unmodifiableList(moves);
     }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
 
     /**
      * An internal class used to hold a reference to a specific board position.

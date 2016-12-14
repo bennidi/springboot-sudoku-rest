@@ -44,8 +44,6 @@ public class SudokuControllerIntegrationTest {
     @Test
     public void getBoardOne() throws Exception {
         ResponseEntity<String> response = template.getForEntity(baseUrl + "/boards/board-one", String.class);
-        System.out.println(response.getBody());
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-        assertThat(response.getBody(), equalTo(null));
     }
 }
