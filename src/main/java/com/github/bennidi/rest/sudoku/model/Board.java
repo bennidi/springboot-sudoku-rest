@@ -1,8 +1,13 @@
 package com.github.bennidi.rest.sudoku.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 /**
@@ -22,24 +27,24 @@ import java.util.*;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
 public class Board {
 
-    private String uuid;
+    @NotNull @Id private String id;
 
     private List<Move> moves = new ArrayList<>(81);
     // Board dimensions do not need to be configurable
     // -> A default boards size of 9*9 is assumed (standard game)
     // Using width/height dimensions internally allows to extend
     // the board easily and does add very little overhead in implementation
-    private final int width = 9;
-    private final int height = 9;
-    private final int gridLength = 3;
-    private final int gridSize = 9;
-    private final Cell[] cells = new Cell[81];
-    private final List<CellGroup> rows = new ArrayList<>();
-    private final List<CellGroup> cols = new ArrayList<>();
-    private final List<CellGroup> grids = new ArrayList<>();
-
+    @JsonIgnore private final int width = 9;
+    @JsonIgnore private final int height = 9;
+    @JsonIgnore private final int gridLength = 3;
+    @JsonIgnore private final int gridSize = 9;
+    @Transient private final Cell[] cells = new Cell[81];
+    @Transient private final List<CellGroup> rows = new ArrayList<>();
+    @Transient private final List<CellGroup> cols = new ArrayList<>();
+    @Transient private final List<CellGroup> grids = new ArrayList<>();
 
     public Board(List<Move> moves){
         // initialize cell groups
@@ -107,14 +112,14 @@ public class Board {
     }
 
     public BoardInfo addMove(Move move){
-        if(!isAdmissible(move)) return new BoardInfo(getUuid(), getLastMove(), getNumberOfRemainingMoves());
+        if(!isAdmissible(move)) return new BoardInfo(getId(), getLastMove(), getNumberOfRemainingMoves());
         cells[move.getIndex()].value = move.getValue();
         moves.add(move);
-        return new BoardInfo(getUuid(), getLastMove(), getNumberOfRemainingMoves());
+        return new BoardInfo(getId(), getLastMove(), getNumberOfRemainingMoves());
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
     public List<Move> getMoves() {

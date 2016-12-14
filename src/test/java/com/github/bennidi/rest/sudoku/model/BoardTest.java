@@ -46,9 +46,6 @@ public class BoardTest {
         assertFalse(givenBoard.getRow(4).isSatisfied());
     }
 
-
-
-
     @Test
     public void testColumnIndexCalculation(){
         Board board = new Board(new ArrayList<>());
