@@ -1,5 +1,6 @@
-package com.github.bennidi.rest.sudoku;
+package com.github.bennidi.rest.sudoku.model;
 
+import com.github.bennidi.rest.sudoku.SudokuRepository;
 import com.github.bennidi.rest.sudoku.model.Board;
 import com.github.bennidi.rest.sudoku.model.Move;
 import org.junit.Test;
@@ -24,22 +25,25 @@ public class BoardTest {
 
     @Test
     public void testGivenBoard(){
-        Board givenBoard = new Board(Arrays.asList(
-                new Move(0, 7), new Move(4, 4), new Move(6, 5), new Move(7, 3),
-                new Move(11, 5), new Move(14, 8), new Move(16, 1),
-                new Move(20, 8), new Move(21, 5), new Move(23, 9), new Move(25, 4),
-                new Move(27, 5), new Move(28, 3), new Move(29, 9), new Move(31, 6), new Move(35, 1),
-                new Move(40, 1), new Move(44, 5),
-                new Move(45, 8), new Move(48, 7), new Move(49, 2), new Move(51, 9),
-                new Move(54, 9), new Move(56, 7), new Move(57, 4),
-                new Move(67, 5), new Move(68, 7),
-                new Move(72, 6), new Move(79, 5)
-        ));
+        Board givenBoard = SudokuRepository.createPredefinedBoard();
         assertFalse(givenBoard.isComplete());
         assertEquals(81-29, givenBoard.getNumberOfRemainingMoves());
         assertTrue(givenBoard.isAdmissible(new Move(8,9)));
         assertTrue(givenBoard.isAdmissible(new Move(37,4)));
         assertFalse(givenBoard.isAdmissible(new Move(2,7)));
+    }
+
+    @Test
+    public void testRowCompletion(){
+        Board givenBoard = SudokuRepository.createPredefinedBoard();
+        assertFalse(givenBoard.isComplete());
+        assertFalse(givenBoard.getRow(3).isSatisfied());
+        givenBoard.addMove(new Move(30,8));
+        givenBoard.addMove(new Move(32,4));
+        givenBoard.addMove(new Move(33,2));
+        givenBoard.addMove(new Move(34,7));
+        assertTrue(givenBoard.getRow(3).isSatisfied());
+        assertFalse(givenBoard.getRow(4).isSatisfied());
     }
 
 

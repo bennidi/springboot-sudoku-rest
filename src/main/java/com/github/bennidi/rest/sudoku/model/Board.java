@@ -51,7 +51,7 @@ public class Board {
         // Assign cells to their respective groups
         // Each cell is part of one row, column and sub-grid
         for(int position=0;position<cells.length; position++){
-            cells[position] = new Cell(-1,position); // Todo: Make empty cell factory
+            cells[position] = new Cell(-1, position);
             int rowIdx = getRowIndex(position);
             int colIdx = getColumnIndex(position);
             int gridIdx = getGridIndex(position);
@@ -72,6 +72,10 @@ public class Board {
         return gridRow + gridCol;
     }
 
+    CellGroup getRow(int index){
+        return rows.get(index);
+    }
+
     public int getNumberOfRemainingMoves(){
         int remaining = 0;
         for(Cell cell: cells){
@@ -80,7 +84,7 @@ public class Board {
         return remaining;
     }
 
-    public boolean isComplete(){
+    public boolean isComplete() {
         return getNumberOfRemainingMoves() == 0;
     }
 
@@ -90,7 +94,7 @@ public class Board {
         }
         Cell target = cells[move.getIndex()];
         if(target.hasValue()){
-            throw new IllegalArgumentException("Cell already contains a value");
+           return false;
         }
         CellGroup grid = grids.get(getGridIndex(move.getIndex()));
         CellGroup row = rows.get(getRowIndex(move.getIndex()));
@@ -98,11 +102,15 @@ public class Board {
         return grid.isAdmissible(move.getValue()) && row.isAdmissible(move.getValue()) && col.isAdmissible(move.getValue());
     }
 
-    public Board addMove(Move move){
-        if(!isAdmissible(move)) return this; // TODO: Silently failing is bad. Should produce outcome of operation instead
+    private Move getLastMove(){
+        return moves.isEmpty() ? null : moves.get(moves.size()-1);
+    }
+
+    public BoardInfo addMove(Move move){
+        if(!isAdmissible(move)) return new BoardInfo(getUuid(), getLastMove(), getNumberOfRemainingMoves());
         cells[move.getIndex()].value = move.getValue();
         moves.add(move);
-        return this; // TODO: Use a Result class to indicate outcome of operation
+        return new BoardInfo(getUuid(), getLastMove(), getNumberOfRemainingMoves());
     }
 
     public String getUuid() {
@@ -121,8 +129,10 @@ public class Board {
         return height;
     }
 
+
     /**
-     *
+     * An internal class used to hold a reference to a specific board position.
+     * Validation of board is computed based on the contents of all its cells.
      */
     class Cell {
 
@@ -137,6 +147,11 @@ public class Board {
         boolean hasValue(){return value != -1;}
     }
 
+    /**
+     * Cell groups are the generic abstraction for rows, column and sub-grids.
+     * A common abstraction was chosen because the same constraints for admissible/required cell values
+     * applies to each group.
+     */
     class CellGroup{
 
         List<Cell> members = new ArrayList<>();
