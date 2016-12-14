@@ -1,9 +1,11 @@
-package hello;
+package com.github.bennidi.rest.sudoku;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,25 +19,24 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class HelloControllerIT {
+public class SudokuControllerIntegrationTest {
 
     @LocalServerPort
     private int port;
 
-    private URL base;
+    private String baseUrl;
 
     @Autowired
     private TestRestTemplate template;
 
     @Before
     public void setUp() throws Exception {
-        this.base = new URL("http://localhost:" + port + "/");
+        this.baseUrl = "http://localhost:" + port + "/";
     }
 
     @Test
-    public void getHello() throws Exception {
-        ResponseEntity<String> response = template.getForEntity(base.toString(),
-                String.class);
-        assertThat(response.getBody(), equalTo("Greetings from Spring Boot!"));
+    public void getUnknownBoard() throws Exception {
+        ResponseEntity<String> response = template.getForEntity(baseUrl + "/unknown", String.class);
+        assertThat(response.getBody(), equalTo(null));
     }
 }
