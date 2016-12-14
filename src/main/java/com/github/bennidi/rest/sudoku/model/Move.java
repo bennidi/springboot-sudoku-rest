@@ -13,9 +13,21 @@ public class Move {
     private int value;
     private Date tsCreated;
 
-    public Move(int index, int value, Date tsCreated) {
+    public Move(int index, int value) {
         this.index = index;
         this.value = value;
-        this.tsCreated = tsCreated;
+        this.tsCreated = new Date();
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public Date getTsCreated() {
+        return tsCreated;
     }
 }
