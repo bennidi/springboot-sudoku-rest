@@ -68,10 +68,4 @@ public class SudokuRestController {
         return info;
     }
 
-
-    @RequestMapping(method = RequestMethod.GET, path = "/")
-    public String index() {
-        return "Welcome to the Board Board Game REST service";
-    }
-    
 }
